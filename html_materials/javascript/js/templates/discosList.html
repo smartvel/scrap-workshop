@@ -1,0 +1,20 @@
+<div class="col-md-3" class="discos_img">
+  <img ng-src="../images/{{disco.image}}.jpeg">
+</div>
+
+<div class="col-md-9">
+  <h1 class="titulo">{{disco.name}}</h1>
+
+  <ul class="list-group">
+    <li class="list-group-item"><span id="field">id:</span><span class="id"> {{disco.id}} </span></li>
+    <li class="list-group-item"><span id="field">author:</span> <span class="author"> {{disco.author}}  </li>
+    <li class="list-group-item"><span id="field">Spotify-Link: </span> <a class="spotifylink" href="{{disco.uri}}">Ir a Spotify</a></span></li>
+    <li class="list-group-item"><span id="field"> Canciones: </span>
+
+    <div ng-repeat="track in disco.tracks">
+	<span class="cancion">{{track}}</span>
+    </div>
+	</li>
+
+  </ul>
+</div>
