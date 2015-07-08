@@ -30,6 +30,16 @@ if __name__ == "__main__":
     discos = []
     url = 'http://scrap.smartvel.net/example1.html'
 
+    # Rules
+    rules = {'discos': ('div', {'class': 'disco'}),
+             'id': ('span', {'class', 'id'}),
+             'title': ('h1', {'class', 'titulo'}),
+             'author': ('span', {'class', 'author'}),
+             'link': ('a', {'class', 'spotifylink'}),
+             'image': ('image',),
+             'canciones': ('span', {'class', 'cancion'})
+             }
+
     # Retrieve the page with GET REQUEST
 
     # Build the DOM
@@ -37,7 +47,5 @@ if __name__ == "__main__":
     # Find disco structure in DOM and iterate it
 
     # Create a disco class for each disco with its fields
-
-
 
     logger.info("Spider collects {} discs ".format(len(discos)))
