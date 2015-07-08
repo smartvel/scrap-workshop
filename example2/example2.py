@@ -50,18 +50,28 @@ if __name__ == "__main__":
     pages = [url['href'] for url in bs.findAll(*rules['pages'])]
     logger.info("#Link pages collected: {} links".format(len(pages)))
 
-    # Find disco structure in DOM and iterate it
-    for disco_raw in bs.findAll(*rules['discos']):
+    # Iterate over the page link retrieved
+    for page in pages:
 
-        # Create a disco class for each disco with its fields
-        discos.append(
-                    Disco(id=disco_raw.find(*rules['id']).text,
-                          title=disco_raw.find(*rules['title']).text,
-                          author=disco_raw.find(*rules['author']).text,
-                          link=disco_raw.find(*rules['link'])['href'],
-                          image=disco_raw.find(*rules['image'])['src'],
-                          canciones=[cancion.text for cancion in disco_raw.findAll(*rules['canciones'])]
-                          )
-                    )
+        # Retrieve the page with GET REQUEST
+        # Take care because in paginated div the links are with relative url.
+        page = requests.get("http://scrap.smartvel.net/"+page)
+
+        # Build the DOM
+        bs = BeautifulSoup(page.text)
+
+        # Find disco structure in DOM and iterate it
+        for disco_raw in bs.findAll(*rules['discos']):
+
+            # Create a disco class for each disco with its fields
+            discos.append(
+                        Disco(id=disco_raw.find(*rules['id']).text,
+                              title=disco_raw.find(*rules['title']).text,
+                              author=disco_raw.find(*rules['author']).text,
+                              link=disco_raw.find(*rules['link'])['href'],
+                              image=disco_raw.find(*rules['image'])['src'],
+                              canciones=[cancion.text for cancion in disco_raw.findAll(*rules['canciones'])]
+                              )
+                        )
 
     logger.info("Spider collects {} discs ".format(len(discos)))
