@@ -36,7 +36,7 @@ if __name__ == "__main__":
              'title': ('h1', {'class', 'titulo'}),
              'author': ('span', {'class', 'author'}),
              'link': ('a', {'class', 'spotifylink'}),
-             'image': ('image',),
+             'image': ('img',),
              'canciones': ('span', {'class', 'cancion'})
              }
 
@@ -47,18 +47,17 @@ if __name__ == "__main__":
     bs = BeautifulSoup(page.text)
 
     # Find disco structure in DOM and iterate it
-    discos_raw = bs.findAll(*rules['discos'])
-    logger.info("discos en raw: {}".format(len(discos_raw)))
+    for disco_raw in bs.findAll(*rules['discos']):
 
-    titulo = discos_raw[0].find(*rules['title'])
-    logger.info("titulo del primer disco: {}".format(titulo.text))
-
-    titulo = discos_raw[1].find(*rules['title'])
-    logger.info("titulo del segundo disco: {}".format(titulo.text))
-
-    author = discos_raw[2].find(*rules['author'])
-    logger.info("autor del tercer disco: {}".format(author.text))
-
-    # Create a disco class for each disco with its fields
+        # Create a disco class for each disco with its fields
+        discos.append(
+                    Disco(id=disco_raw.find(*rules['id']).text,
+                          title=disco_raw.find(*rules['title']).text,
+                          author=disco_raw.find(*rules['author']).text,
+                          link=disco_raw.find(*rules['link'])['href'],
+                          image=disco_raw.find(*rules['image'])['src'],
+                          canciones=[cancion.text for cancion in disco_raw.findAll(*rules['canciones'])]
+                          )
+                    )
 
     logger.info("Spider collects {} discs ".format(len(discos)))
