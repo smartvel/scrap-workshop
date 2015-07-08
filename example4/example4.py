@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import structlog
 from selenium import webdriver
-from bs4 import BeautifulSoup
 
 logger = structlog.getLogger(__name__)
 
@@ -41,7 +40,21 @@ if __name__ == "__main__":
              }
 
     # Retrieve the page with Selenium
-
     driver = webdriver.PhantomJS(service_log_path='/dev/null')
     driver.get(url)
-    logger.info("Spider collects this page: {} ".format(driver.page_source))
+    page_content = driver.page_source
+    pages = 1
+
+    # Find next_page button
+    next_page = driver.find_element_by_class_name('btn')
+
+    # look for a  visible next page button
+    while next_page and next_page.is_displayed():
+        # next page clicking the button
+        next_page.click()
+        pages += 1
+
+        # find next page button
+        next_page = driver.find_element_by_class_name('btn')
+
+    logger.info("Spider with seleniun visits {} pages ".format(pages))
