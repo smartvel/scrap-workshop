@@ -42,12 +42,22 @@ if __name__ == "__main__":
 
     # Retrieve the page with GET REQUEST
     page = requests.get(url)
-    logger.info("Request Status_code: {}".format(page.status_code))
-    logger.info("Information in request: {}".format(page.text))
 
     # Build the DOM
+    bs = BeautifulSoup(page.text)
 
     # Find disco structure in DOM and iterate it
+    discos_raw = bs.findAll(*rules['discos'])
+    logger.info("discos en raw: {}".format(len(discos_raw)))
+
+    titulo = discos_raw[0].find(*rules['title'])
+    logger.info("titulo del primer disco: {}".format(titulo.text))
+
+    titulo = discos_raw[1].find(*rules['title'])
+    logger.info("titulo del segundo disco: {}".format(titulo.text))
+
+    author = discos_raw[2].find(*rules['author'])
+    logger.info("autor del tercer disco: {}".format(author.text))
 
     # Create a disco class for each disco with its fields
 
