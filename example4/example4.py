@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import structlog
-import requests
+from selenium import webdriver
 from bs4 import BeautifulSoup
 
 logger = structlog.getLogger(__name__)
@@ -40,7 +40,8 @@ if __name__ == "__main__":
              'pages': ('a', {'class', 'page'})
              }
 
-    # Retrieve the page with GET REQUEST
-    page = requests.get(url)
+    # Retrieve the page with Selenium
 
-    logger.info("Spider collects {} discs ".format(page.text))
+    driver = webdriver.PhantomJS(service_log_path='/dev/null')
+    driver.get(url)
+    logger.info("Spider collects this page: {} ".format(driver.page_source))
