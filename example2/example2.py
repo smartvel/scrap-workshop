@@ -36,7 +36,8 @@ if __name__ == "__main__":
              'author': ('span', {'class', 'author'}),
              'link': ('a', {'class', 'spotifylink'}),
              'image': ('img',),
-             'canciones': ('span', {'class', 'cancion'})
+             'canciones': ('span', {'class', 'cancion'}),
+             'pages': ('a', {'class', 'page'})
              }
 
     # Retrieve the page with GET REQUEST
