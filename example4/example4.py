@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import structlog
 from selenium import webdriver
+from bs4 import BeautifulSoup
 
 logger = structlog.getLogger(__name__)
 
@@ -29,21 +30,33 @@ if __name__ == "__main__":
     url = 'http://scrap.smartvel.net/javascript/example4.html'
 
     # Rules
-    rules = {'discos': ('div', {'class': 'disco'}),
+    rules = {'discos': ('discos_list',),
              'id': ('span', {'class', 'id'}),
              'title': ('h1', {'class', 'titulo'}),
              'author': ('span', {'class', 'author'}),
              'link': ('a', {'class', 'spotifylink'}),
              'image': ('img',),
              'canciones': ('span', {'class', 'cancion'}),
-             'pages': ('a', {'class', 'page'})
              }
 
     # Retrieve the page with Selenium
     driver = webdriver.PhantomJS(service_log_path='/dev/null')
     driver.get(url)
-    page_content = driver.page_source
     pages = 1
+
+    page = BeautifulSoup(driver.page_source)
+
+    # Retrieve the discs in first page
+    for disco_raw in page.findAll(*rules['discos']):
+        discos.append(
+            Disco(id=disco_raw.find(*rules['id']).text,  # chaged this rule..
+                  title=disco_raw.find(*rules['title']).text,
+                  author=disco_raw.find(*rules['author']).text,
+                  link=disco_raw.find(*rules['link'])['href'],
+                  image=disco_raw.find(*rules['image'])['src'],
+                  canciones=[cancion.text for cancion in disco_raw.findAll(*rules['canciones'])]
+                  )
+            )
 
     # Find next_page button
     next_page = driver.find_element_by_class_name('btn')
@@ -54,7 +67,22 @@ if __name__ == "__main__":
         next_page.click()
         pages += 1
 
+        # Retrieve the discs in page
+        page = BeautifulSoup(driver.page_source)
+
+        for disco_raw in page.findAll(*rules['discos']):
+            discos.append(
+                Disco(id=disco_raw.find(*rules['id']).text,
+                      title=disco_raw.find(*rules['title']).text,
+                      author=disco_raw.find(*rules['author']).text,
+                      link=disco_raw.find(*rules['link'])['href'],
+                      image=disco_raw.find(*rules['image'])['src'],
+                      canciones=[cancion.text for cancion in disco_raw.findAll(*rules['canciones'])]
+                      )
+            )
+
         # find next page button
         next_page = driver.find_element_by_class_name('btn')
 
     logger.info("Spider with seleniun visits {} pages ".format(pages))
+    logger.info("Spider collects {} discs ".format(len(discos)))
