@@ -41,6 +41,9 @@ if __name__ == "__main__":
              }
 
     # Retrieve the page with GET REQUEST
+    page = requests.get(url)
+    logger.info("Request Status_code: {}".format(page.status_code))
+    logger.info("Information in request: {}".format(page.text))
 
     # Build the DOM
 
