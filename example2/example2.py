@@ -46,6 +46,10 @@ if __name__ == "__main__":
     # Build the DOM
     bs = BeautifulSoup(page.text)
 
+    # Retrieve the link pages in pagination div.
+    pages = [url['href'] for url in bs.findAll(*rules['pages'])]
+    logger.info("#Link pages collected: {} links".format(len(pages)))
+
     # Find disco structure in DOM and iterate it
     for disco_raw in bs.findAll(*rules['discos']):
 
