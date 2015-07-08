@@ -37,8 +37,8 @@ if __name__ == "__main__":
              'canciones': ('span', {'class', 'cancion'})
              }
 
-    # Retrieve the page with GET REQUEST
-    page = requests.get(url)
+    # Retrieve the page with GET REQUEST & AUTH
+    page = requests.get(url=url, auth=('test', 'test'))
 
     # Build the DOM
     bs = BeautifulSoup(page.text)
